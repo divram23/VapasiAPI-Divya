@@ -2,11 +2,8 @@ package ResponseMethods;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class AddBookResponse {
-
-    //@JsonProperty("msg")
-
     private String Msg;
     private String ID;
 
@@ -15,8 +12,6 @@ public class AddBookResponse {
         this.ID = ID;
 
     }
-
-
 
     public AddBookResponse(String Msg, String ID) {
         this.Msg = Msg;
@@ -44,23 +39,4 @@ public class AddBookResponse {
     }
 }
 
-/*public class MyPojo
-{
-    private AddBookResponse[] addBookResponses;
 
-    public AddBookResponse[] getData ()
-    {
-        return addBookResponses;
-    }
-
-    public void setData (AddBookResponse[] data)
-    {
-        this.addBookResponses = addBookResponses;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [data = "+addBookResponses+"]";
-    }
-}*/
