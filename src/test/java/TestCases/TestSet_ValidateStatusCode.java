@@ -1,13 +1,11 @@
 package TestCases;
 
 import RequestMethods.AddBookRequest;
-import ResponseMethods.GetBookResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.json.simple.JSONObject;
-
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -18,7 +16,7 @@ public class TestSet_ValidateStatusCode {
 
 
 
-@Test
+@Test (priority = 0)
     public void verifyAddBookPOSTMethod(){
     RestAssured.baseURI = "http://216.10.245.166";
 
@@ -44,8 +42,8 @@ public class TestSet_ValidateStatusCode {
 
 }
 
-@Test
-    public void verifyPOSTWithJSONParameters(){
+@Test (priority = 2)
+    public void verifyAddBookPOSTWithJSONParameters(){
 
     RestAssured.baseURI = "http://216.10.245.166";
     RequestSpecification request = RestAssured.given();
@@ -65,7 +63,7 @@ public class TestSet_ValidateStatusCode {
 
 }
 
-@Test
+@Test (priority = 3)
     public void verifyGetBookByIdGETMethod(){
     RestAssured.baseURI = "http://216.10.245.166";
 

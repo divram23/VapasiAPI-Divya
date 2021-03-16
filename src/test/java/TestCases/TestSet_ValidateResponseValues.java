@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
 
 public class TestSet_ValidateResponseValues {
 
-    public static String responseIdParameter = "";
+
 
     @Test(priority = 0)
     public void verifyAddBookPOSTMethodResponseValues() throws JsonProcessingException {
@@ -33,12 +33,9 @@ public class TestSet_ValidateResponseValues {
         request.body(requestParams.toJSONString());
 
         Response response = request.post("/Library/Addbook.php");
-        /*Response responseAddBook = request.header("Content-Type", "application/json").body(requestParams).
-                when().post("Library/Addbook.php").then().log().all().
-                assertThat().statusCode(200).extract().response();
-*/
+
         int statusCode = response.getStatusCode();
-        //Assert.assertEquals(response.getStatusCode(), 200);
+
         System.out.println("POST - AddBook Response Status: "+statusCode);
         String json = response.asString();
 
@@ -48,18 +45,13 @@ public class TestSet_ValidateResponseValues {
 
         AddBookResponse[] addBookResponses = mapper.readValue(json, AddBookResponse[].class);
 
-        /*String Msg = addBookResponses[0].getMsg();
-        String ID = addBookResponses[0].getID();
-        System.out.println(Msg);
-        System.out.println(ID);*/
-
         String actualID = addBookResponses[0].getID();
         Assert.assertEquals(actualID, "1222412AA4");
         System.out.println("Response ID: "+actualID);
-        responseIdParameter = actualID;
+
     }
 
-    @Test(priority = 1, dependsOnMethods = "verifyAddBookPOSTMethodResponseValues")
+    @Test(priority = 1)
     public void verifyGetBookByIdGETMethodResponseValues(){
         RestAssured.baseURI = "http://216.10.245.166";
 
@@ -70,15 +62,13 @@ public class TestSet_ValidateResponseValues {
         GetBookResponse[] getBookResponses = response.as(GetBookResponse[].class);
 
         String actual = getBookResponses[0].getAuthor();
-        System.out.println(actual);
-        Assert.assertEquals(actual, "pooja");
 
-        //Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(actual, "pooja");
         System.out.println("GetBook GET Method Status returned: "+response.getStatusCode());
     }
 
 
-    @Test
+    @Test (priority = 2)
     public void verifyAddBookAndGetBookDetails() throws JsonProcessingException {
 
         RestAssured.baseURI = "http://216.10.245.166";
@@ -86,17 +76,15 @@ public class TestSet_ValidateResponseValues {
 
         JSONObject requestParams = new JSONObject();
         requestParams.put("name", "Agile1");
-        requestParams.put("isbn", "12221");
-        requestParams.put("aisle", "12AA4");
+        requestParams.put("isbn", "12239");
+        requestParams.put("aisle", "1200");
         requestParams.put("author", "Rowling123");
         request.body(requestParams.toJSONString());
 
         Response response = request.post("/Library/Addbook.php");
-        /*Response responseAddBook = request.header("Content-Type", "application/json").body(requestParams).
-                when().post("Library/Addbook.php").then().log().all().
-                assertThat().statusCode(200).extract().response();
-        */
+
         int statusCode = response.getStatusCode();
+
         System.out.println("POST - AddBook Response Status: "+statusCode);
         String json = response.asString();
 
@@ -108,17 +96,22 @@ public class TestSet_ValidateResponseValues {
 
         String actualID = addBookResponses[0].getID();
 
-        System.out.println("Response ID: "+actualID);
+        //System.out.println("Response ID: "+actualID);
 
         RequestSpecification request1 = RestAssured.given().queryParam("ID", actualID);
 
-        Response response1 = request.get("/Library/GetBook.php");
+        Response response1 = request1.get("/Library/GetBook.php");
 
-        GetBookResponse[] getBookResponses = response.as(GetBookResponse[].class);
+        String json2 = response1.asString();
+
+        ObjectMapper mapper2 = new ObjectMapper();
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+
+        GetBookResponse[] getBookResponses = mapper2.readValue(json2, GetBookResponse[].class);
 
         String actualAuthor = getBookResponses[0].getAuthor();
 
-        System.out.println(actualAuthor);
+        //System.out.println(actualAuthor);
         Assert.assertEquals(actualAuthor, "Rowling123");
         System.out.println("GetBook GET Method Status returned: "+response.getStatusCode());
 
